@@ -49,7 +49,7 @@ namespace SimpleJSON
         public static JSONContainerType VectorContainerType = JSONContainerType.Array;
         public static JSONContainerType QuaternionContainerType = JSONContainerType.Array;
         public static JSONContainerType RectContainerType = JSONContainerType.Array;
-	public static JSONContainerType ColorContainerType = JSONContainerType.Array;
+	public static JSONContainerType ColorContainerType = JSONContainerType.Object;
         private static JSONNode GetContainer(JSONContainerType aType)
         {
             if (aType == JSONContainerType.Array)
@@ -97,7 +97,7 @@ namespace SimpleJSON
 	public static implicit operator JSONNode(Color aColor)
 		{
             JSONNode n = GetContainer(ColorContainerType);
-            n.WriteColor(aColor);
+            n.WriteColor(aColor, aColor.a < 1);
             return n;
         }
 
@@ -381,14 +381,14 @@ namespace SimpleJSON
         public Color ReadColor(Color aDefault)
         {
             if (IsObject)
-                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this["a"]?.AsFloat ?? 1);
+                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this?["a"]?.AsFloat ?? 1);
             if (IsArray)
-                return new Color(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3]?.AsFloat ?? 1);
+                return new Color(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this?[3]?.AsFloat ?? 1);
             return aDefault;
         }
         public Color ReadColor()
         {
-            return ReadVector4(Color.white);
+            return ReadColor(Color.white);
         }
         public JSONNode WriteColor(Color aVec, bool aWriteAlpha = true)
         {
