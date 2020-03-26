@@ -93,6 +93,12 @@ namespace SimpleJSON
             n.WriteRectOffset(aRect);
             return n;
         }
+	public static implicit operator JSONNode(Color aColor)
+		{
+            JSONNode n = GetContainer(ColorContainerType);
+            n.WriteColor(aColor);
+            return n;
+        }
 
         public static implicit operator Vector2(JSONNode aNode)
         {
@@ -117,6 +123,10 @@ namespace SimpleJSON
         public static implicit operator RectOffset(JSONNode aNode)
         {
             return aNode.ReadRectOffset();
+        }
+        public static implicit operator Color(JSONNode aNode)
+	{
+            return aNode.ReadColor();
         }
         #endregion implicit conversion operators
 
@@ -365,5 +375,40 @@ namespace SimpleJSON
             return this;
         }
         #endregion Matrix4x4
+		
+	#region Color
+        public Color ReadColor(Color aDefault)
+        {
+            if (IsObject)
+                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this["a"]?.AsFloat ?? 1);
+            if (IsArray)
+                return new Color(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3]?.AsFloat ?? 1);
+            return aDefault;
+        }
+        public Color ReadColor()
+        {
+            return ReadVector4(Color.white);
+        }
+        public JSONNode WriteColor(Color aVec, bool aWriteAlpha = true)
+        {
+            if (IsObject)
+            {
+                Inline = true;
+                this["r"].AsFloat = aVec.r;
+                this["g"].AsFloat = aVec.g;
+                this["b"].AsFloat = aVec.b;
+                if (aWriteAlpha) this["a"].AsFloat = aVec.a;
+            }
+            else if (IsArray)
+            {
+                Inline = true;
+                this[0].AsFloat = aVec.r;
+                this[1].AsFloat = aVec.g;
+                this[2].AsFloat = aVec.b;
+                if (aWriteAlpha) this[3].AsFloat = aVec.a;
+            }
+            return this;
+        }
+        #endregion Color
     }
 }
