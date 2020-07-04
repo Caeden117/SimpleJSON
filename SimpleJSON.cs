@@ -605,7 +605,7 @@ namespace SimpleJSON
                         // This throws a JSONParseException if one of two conditions are met:
                         // 1) A new line was detected with no proper closing symbols ("," "]" "}") to say otherwise
                         // 2) An opening quotation mark is detected when we are already writing a value
-                        if (NewLine || (ValueMode && Token.Length > 0 && !TokenIsQuoted))
+                        if (NewLine || (ValueMode && Token.Length > 0 && QuoteMode))
                         {
                             throw new JSONParseException("Node missing a required comma", locationStack, Token.ToString());
                         }
