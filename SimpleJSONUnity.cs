@@ -44,12 +44,12 @@ using UnityEngine;
 namespace SimpleJSON
 {
     public enum JSONContainerType { Array, Object }
-	public partial class JSONNode
-	{
+    public partial class JSONNode
+    {
         public static JSONContainerType VectorContainerType = JSONContainerType.Array;
         public static JSONContainerType QuaternionContainerType = JSONContainerType.Array;
         public static JSONContainerType RectContainerType = JSONContainerType.Array;
-	public static JSONContainerType ColorContainerType = JSONContainerType.Object;
+        public static JSONContainerType ColorContainerType = JSONContainerType.Array;
         private static JSONNode GetContainer(JSONContainerType aType)
         {
             if (aType == JSONContainerType.Array)
@@ -59,43 +59,43 @@ namespace SimpleJSON
 
         #region implicit conversion operators
         public static implicit operator JSONNode(Vector2 aVec)
-		{
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector2(aVec);
-			return n;
-		}
-		public static implicit operator JSONNode(Vector3 aVec)
-		{
+            return n;
+        }
+        public static implicit operator JSONNode(Vector3 aVec)
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector3(aVec);
             return n;
         }
         public static implicit operator JSONNode(Vector4 aVec)
-		{
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector4(aVec);
             return n;
         }
         public static implicit operator JSONNode(Quaternion aRot)
-		{
+        {
             JSONNode n = GetContainer(QuaternionContainerType);
             n.WriteQuaternion(aRot);
             return n;
         }
         public static implicit operator JSONNode(Rect aRect)
-		{
+        {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRect(aRect);
             return n;
         }
         public static implicit operator JSONNode(RectOffset aRect)
-		{
+        {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRectOffset(aRect);
             return n;
         }
-	public static implicit operator JSONNode(Color aColor)
-		{
+        public static implicit operator JSONNode(Color aColor)
+        {
             JSONNode n = GetContainer(ColorContainerType);
             n.WriteColor(aColor, aColor.a < 1);
             return n;
@@ -126,7 +126,7 @@ namespace SimpleJSON
             return aNode.ReadRectOffset();
         }
         public static implicit operator Color(JSONNode aNode)
-	{
+        {
             return aNode.ReadColor();
         }
         #endregion implicit conversion operators
@@ -376,14 +376,14 @@ namespace SimpleJSON
             return this;
         }
         #endregion Matrix4x4
-		
-	#region Color
+
+        #region Color
         public Color ReadColor(Color aDefault)
         {
             if (IsObject)
-                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this?["a"]?.AsFloat ?? 1);
+                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, HasKey("a") ? this["a"].AsFloat : 1);
             if (IsArray)
-                return new Color(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this?[3]?.AsFloat ?? 1);
+                return new Color(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, Count > 3 ? this[3].AsFloat : 1);
             return aDefault;
         }
         public Color ReadColor()
