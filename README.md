@@ -2,7 +2,7 @@
 A simple one class file to parse, modify, and export JSON.
 
 ## SimpleJSONUnity
-A one class extension to SimpleJSON that allows parsing, modifying, and exporting of common Unity objects (`Vector2, `Vector3`, `Quaternion`, `Rect`, `Color`, etc.)
+A one class extension to SimpleJSON that allows parsing, modifying, and exporting of common Unity objects (`Vector2`, `Vector3`, `Quaternion`, `Rect`, `Color`, etc.)
 
 ## SimpleJSONBinary
 A one class extension to SimpleJSON that provides methods to serialize a JSON object tree into a compact binary format.
